@@ -1,0 +1,73 @@
+{
+  "engine": "postgres",
+  "corpus_size": 1000000,
+  "index_build_seconds": 349.505203334,
+  "index_bytes": 1971412992,
+  "shapes": [
+    {
+      "shape": "common",
+      "supported": true,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 1053.792,
+      "p95_ms": 1369.117,
+      "p99_ms": 1490.88,
+      "max_ms": 1754.009,
+      "qps": 7.369923100858684,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "rare",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.264,
+      "p95_ms": 2.562,
+      "p99_ms": 13.366,
+      "max_ms": 16.125,
+      "qps": 4446.590879737514,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "and",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.455,
+      "p95_ms": 3.536,
+      "p99_ms": 15.938,
+      "max_ms": 77.833,
+      "qps": 3248.128234976699,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "phrase",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.507,
+      "p95_ms": 2.825,
+      "p99_ms": 9.815,
+      "max_ms": 18.688,
+      "qps": 4106.5530748457795,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "typo",
+      "supported": false,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 0,
+      "p95_ms": 0,
+      "p99_ms": 0,
+      "max_ms": 0,
+      "qps": 0,
+      "samples": 0,
+      "concurrency": 8
+    }
+  ]
+}

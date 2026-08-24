@@ -1,0 +1,73 @@
+{
+  "engine": "elasticsearch",
+  "corpus_size": 1000000,
+  "index_build_seconds": 65.95773525,
+  "index_bytes": 478000239,
+  "shapes": [
+    {
+      "shape": "common",
+      "supported": true,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 6.333,
+      "p95_ms": 18.978,
+      "p99_ms": 31.727,
+      "max_ms": 197.025,
+      "qps": 846.3327445119021,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "rare",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 3.933,
+      "p95_ms": 8.186,
+      "p99_ms": 10.606,
+      "max_ms": 20.68,
+      "qps": 1755.1763100272876,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "and",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 3.946,
+      "p95_ms": 7.741,
+      "p99_ms": 10.481,
+      "max_ms": 14.891,
+      "qps": 1744.6609848195449,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "phrase",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 3.801,
+      "p95_ms": 9.267,
+      "p99_ms": 15.329,
+      "max_ms": 26.688,
+      "qps": 1692.2830107938987,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "typo",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 8.353,
+      "p95_ms": 15.506,
+      "p99_ms": 20.14,
+      "max_ms": 29.567,
+      "qps": 852.5060105776431,
+      "samples": 1200,
+      "concurrency": 8
+    }
+  ]
+}

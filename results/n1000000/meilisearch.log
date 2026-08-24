@@ -1,0 +1,82 @@
+2026/08/24 18:53:20 engine=meilisearch n=1000000 queries=81
+2026/08/24 19:29:54 built in 2194.4s, index 7977357312 bytes
+2026/08/24 19:29:56   common  supported=true recall@10=-1.000 mrr@10=-1.000 p50=6.12ms p99=15.04ms qps=1150
+2026/08/24 19:29:58   rare    supported=true recall@10=1.000 mrr@10=1.000 p50=2.38ms p99=7.57ms qps=2652
+2026/08/24 19:30:00   and     supported=true recall@10=1.000 mrr@10=1.000 p50=3.67ms p99=20.47ms qps=1723
+2026/08/24 19:30:01   phrase  supported=true recall@10=1.000 mrr@10=1.000 p50=1.63ms p99=5.06ms qps=3956
+2026/08/24 19:30:02   typo    supported=true recall@10=1.000 mrr@10=1.000 p50=2.78ms p99=13.71ms qps=2293
+{
+  "engine": "meilisearch",
+  "corpus_size": 1000000,
+  "index_build_seconds": 2194.373747083,
+  "index_bytes": 7977357312,
+  "shapes": [
+    {
+      "shape": "common",
+      "supported": true,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 6.119,
+      "p95_ms": 11.588,
+      "p99_ms": 15.041,
+      "max_ms": 49.447,
+      "qps": 1149.9453688745593,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "rare",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 2.379,
+      "p95_ms": 5.464,
+      "p99_ms": 7.574,
+      "max_ms": 33.666,
+      "qps": 2652.175714889378,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "and",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 3.672,
+      "p95_ms": 8.55,
+      "p99_ms": 20.468,
+      "max_ms": 33.865,
+      "qps": 1723.065451525683,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "phrase",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.63,
+      "p95_ms": 3.939,
+      "p99_ms": 5.059,
+      "max_ms": 7.384,
+      "qps": 3955.9472179192962,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "typo",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 2.781,
+      "p95_ms": 7.057,
+      "p99_ms": 13.715,
+      "max_ms": 21.058,
+      "qps": 2293.4961531103017,
+      "samples": 1200,
+      "concurrency": 8
+    }
+  ]
+}
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   460Gi   408Gi   8.9Gi    98%    5.9M   93M    6%   /System/Volumes/Data

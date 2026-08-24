@@ -1,0 +1,1 @@
+466952	/usr/share/elasticsearch/data

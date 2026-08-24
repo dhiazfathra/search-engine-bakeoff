@@ -1,0 +1,14 @@
+expressjs-nestjs-golang-benchmarking-go-1 19.29MiB / 512MiB 2.88%
+search-engine-bakeoff-meilisearch-1 1.352GiB / 7.817GiB 1.25%
+expressjs-nestjs-golang-benchmarking-express-1 44.5MiB / 512MiB 0.01%
+expressjs-nestjs-golang-benchmarking-nestjs-1 71.62MiB / 512MiB 0.01%
+expressjs-nestjs-golang-benchmarking-express-cluster-1 87.8MiB / 512MiB 0.01%
+cost-of-one-hop-gw-http-1 8.734MiB / 7.817GiB 0.00%
+cost-of-one-hop-gw-grpc-1 8.047MiB / 7.817GiB 0.00%
+cost-of-one-hop-svc-1 11.12MiB / 7.817GiB 0.00%
+cost-of-one-hop-monolith-1 19.56MiB / 7.817GiB 0.00%
+cost-of-one-hop-postgres-1 142.8MiB / 7.817GiB 5.90%
+expressjs-nestjs-golang-benchmarking-postgres-1 213.7MiB / 1GiB 0.00%
+backend-postgres-1 6.82MiB / 7.817GiB 0.02%
+backend-minio-1 97.77MiB / 7.817GiB 0.40%
+backend-redis-1 8.105MiB / 7.817GiB 0.46%

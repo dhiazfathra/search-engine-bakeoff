@@ -1,0 +1,82 @@
+2026/08/24 13:10:32 engine=postgres n=1000000 queries=81
+2026/08/24 16:36:16 built in 349.5s, index 1971412992 bytes
+2026/08/24 16:39:53   common  supported=true recall@10=-1.000 mrr@10=-1.000 p50=1053.79ms p99=1490.88ms qps=7
+2026/08/24 16:39:54   rare    supported=true recall@10=1.000 mrr@10=1.000 p50=1.26ms p99=13.37ms qps=4447
+2026/08/24 16:39:54   and     supported=true recall@10=1.000 mrr@10=1.000 p50=1.46ms p99=15.94ms qps=3248
+2026/08/24 16:39:55   phrase  supported=true recall@10=1.000 mrr@10=1.000 p50=1.51ms p99=9.81ms qps=4107
+2026/08/24 16:39:55   typo    supported=false recall@10=-1.000 mrr@10=-1.000 p50=0.00ms p99=0.00ms qps=0
+{
+  "engine": "postgres",
+  "corpus_size": 1000000,
+  "index_build_seconds": 349.505203334,
+  "index_bytes": 1971412992,
+  "shapes": [
+    {
+      "shape": "common",
+      "supported": true,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 1053.792,
+      "p95_ms": 1369.117,
+      "p99_ms": 1490.88,
+      "max_ms": 1754.009,
+      "qps": 7.369923100858684,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "rare",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.264,
+      "p95_ms": 2.562,
+      "p99_ms": 13.366,
+      "max_ms": 16.125,
+      "qps": 4446.590879737514,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "and",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.455,
+      "p95_ms": 3.536,
+      "p99_ms": 15.938,
+      "max_ms": 77.833,
+      "qps": 3248.128234976699,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "phrase",
+      "supported": true,
+      "recall_at_10": 1,
+      "mrr_at_10": 1,
+      "p50_ms": 1.507,
+      "p95_ms": 2.825,
+      "p99_ms": 9.815,
+      "max_ms": 18.688,
+      "qps": 4106.5530748457795,
+      "samples": 1200,
+      "concurrency": 8
+    },
+    {
+      "shape": "typo",
+      "supported": false,
+      "recall_at_10": -1,
+      "mrr_at_10": -1,
+      "p50_ms": 0,
+      "p95_ms": 0,
+      "p99_ms": 0,
+      "max_ms": 0,
+      "qps": 0,
+      "samples": 0,
+      "concurrency": 8
+    }
+  ]
+}
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   460Gi   403Gi    18Gi    96%    6.1M  191M    3%   /System/Volumes/Data
