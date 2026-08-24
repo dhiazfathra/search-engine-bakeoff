@@ -1,0 +1,7 @@
+.DS_Store
+.serena/
+.procoder/state/
+.claude/settings.local.json
+.tokensave
+/bakeoff
+*.tmp

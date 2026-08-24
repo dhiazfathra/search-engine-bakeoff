@@ -1,0 +1,53 @@
+# One engine at a time, on purpose: three indexes of this corpus do not fit in
+# the free disk on the test machine. Profiles keep them mutually exclusive.
+services:
+  postgres:
+    profiles: ["pg"]
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bakeoff
+      POSTGRES_PASSWORD: bakeoff
+      POSTGRES_DB: bakeoff
+    command: >
+      postgres -c shared_buffers=2GB -c work_mem=64MB
+               -c maintenance_work_mem=1GB -c effective_cache_size=6GB
+               -c max_wal_size=4GB -c random_page_cost=1.1
+    ports: ["55433:5432"]
+    shm_size: 1gb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bakeoff"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  elasticsearch:
+    profiles: ["es"]
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.5
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      xpack.ml.enabled: "false"
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+      bootstrap.memory_lock: "true"
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+    ports: ["9201:9200"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs localhost:9200/_cluster/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+
+  meilisearch:
+    profiles: ["ms"]
+    image: getmeili/meilisearch:v1.24
+    environment:
+      MEILI_MASTER_KEY: bakeoffmasterkey
+      MEILI_ENV: production
+      MEILI_NO_ANALYTICS: "true"
+    ports: ["7701:7700"]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs localhost:7700/health || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 60
