@@ -152,6 +152,10 @@ func main() {
 		esURL  = flag.String("es", "http://localhost:9201", "")
 		msURL  = flag.String("ms", "http://localhost:7701", "")
 		msKey  = flag.String("mskey", "bakeoffmasterkey", "")
+		phase  = flag.String("phase", "both", "load|query|both; splitting them lets the "+
+			"caller hold the shared benchmark lock for the query phase only")
+		state = flag.String("state", "", "file the load phase writes build metrics to and "+
+			"the query phase reads them back from")
 	)
 	flag.Parse()
 
@@ -175,23 +179,42 @@ func main() {
 	p := buildPlan(*n)
 	log.Printf("engine=%s n=%d queries=%d", e.Name(), *n, len(p.queries))
 
-	t0 := time.Now()
-	if err := e.Load(ctx, *n, p); err != nil {
-		log.Fatalf("load: %v", err)
+	r := engineResult{Engine: e.Name(), CorpusSize: *n}
+	if *phase != "query" {
+		t0 := time.Now()
+		if err := e.Load(ctx, *n, p); err != nil {
+			log.Fatalf("load: %v", err)
+		}
+		r.BuildSeconds = time.Since(t0).Seconds()
+		size, err := e.IndexBytes(ctx)
+		if err != nil {
+			log.Fatalf("index size: %v", err)
+		}
+		r.IndexBytes = size
+		log.Printf("built in %.1fs, index %d bytes", r.BuildSeconds, size)
+		if *state != "" {
+			b, _ := json.Marshal(r)
+			if err := os.WriteFile(*state, b, 0o644); err != nil {
+				log.Fatal(err)
+			}
+		}
+		if *phase == "load" {
+			return
+		}
+	} else if *state != "" {
+		b, err := os.ReadFile(*state)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := json.Unmarshal(b, &r); err != nil {
+			log.Fatal(err)
+		}
 	}
-	build := time.Since(t0)
-	size, err := e.IndexBytes(ctx)
-	if err != nil {
-		log.Fatalf("index size: %v", err)
-	}
-	log.Printf("built in %s, index %d bytes", build.Round(time.Millisecond), size)
 
 	byShape := map[Shape][]Query{}
 	for _, q := range p.queries {
 		byShape[q.Shape] = append(byShape[q.Shape], q)
 	}
-	r := engineResult{Engine: e.Name(), CorpusSize: *n,
-		BuildSeconds: build.Seconds(), IndexBytes: size}
 	for _, s := range shapes {
 		qs := byShape[s]
 		if len(qs) == 0 {
