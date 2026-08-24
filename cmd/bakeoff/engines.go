@@ -45,7 +45,7 @@ func postJSON(ctx context.Context, method, url string, body any, out any) error 
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode >= 300 {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 2000))
 		return fmt.Errorf("%s %s: %s: %s", method, url, resp.Status, b)
@@ -96,7 +96,7 @@ func (p *pgEngine) Load(ctx context.Context, n int, pl *plan) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 	if _, err := conn.ExecContext(ctx, `SET maintenance_work_mem='1GB'`); err != nil {
 		return err
 	}
@@ -136,22 +136,18 @@ func (p *pgEngine) Load(ctx context.Context, n int, pl *plan) error {
 }
 
 func (p *pgEngine) Search(ctx context.Context, q Query, k int) ([]int, error) {
-	var sqlq, arg string
-	switch q.Shape {
-	case ShapeTypo:
-		// Postgres FTS has no typo tolerance out of the box. Capability gap.
+	if q.Shape == ShapeTypo {
+		// Postgres FTS has no typo tolerance out of the box. Capability gap,
+		// not a slow number.
 		return nil, errUnsupported
-	case ShapePhrase:
-		sqlq = `SELECT id FROM docs WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT $2`
-		arg = strings.Join(q.Terms, " ")
-		return p.query(ctx, `WITH t AS (SELECT phraseto_tsquery('english',$1) q) `+
-			`SELECT id FROM docs, t WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT $2`, arg, k)
-	default:
-		arg = strings.Join(q.Terms, " ")
-		_ = sqlq
-		return p.query(ctx, `WITH t AS (SELECT plainto_tsquery('english',$1) q) `+
-			`SELECT id FROM docs, t WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT $2`, arg, k)
 	}
+	parse := "plainto_tsquery"
+	if q.Shape == ShapePhrase {
+		parse = "phraseto_tsquery"
+	}
+	return p.query(ctx, `WITH t AS (SELECT `+parse+`('english',$1) q) `+
+		`SELECT id FROM docs, t WHERE tsv @@ q ORDER BY ts_rank_cd(tsv, q) DESC LIMIT $2`,
+		strings.Join(q.Terms, " "), k)
 }
 
 func (p *pgEngine) query(ctx context.Context, s, arg string, k int) ([]int, error) {
@@ -159,7 +155,7 @@ func (p *pgEngine) query(ctx context.Context, s, arg string, k int) ([]int, erro
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	var out []int
 	for rows.Next() {
 		var id int
@@ -218,7 +214,7 @@ func (e *esEngine) Load(ctx context.Context, n int, pl *plan) error {
 		if err != nil {
 			return err
 		}
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		var r struct {
 			Errors bool `json:"errors"`
 		}
@@ -288,7 +284,9 @@ func (e *esEngine) Search(ctx context.Context, q Query, k int) ([]int, error) {
 	out := make([]int, 0, k)
 	for _, h := range res.Hits.Hits {
 		var id int
-		fmt.Sscanf(h.ID, "%d", &id)
+		if _, err := fmt.Sscanf(h.ID, "%d", &id); err != nil {
+			return nil, err
+		}
 		out = append(out, id)
 	}
 	return out, nil
@@ -337,7 +335,7 @@ func (m *meiliEngine) do(ctx context.Context, method, path string, body, out any
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode >= 300 {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, 2000))
 		return fmt.Errorf("%s %s: %s: %s", method, path, resp.Status, b)
