@@ -65,6 +65,23 @@ func TestTypoIsOneEdit(t *testing.T) {
 		if diff != 1 {
 			t.Fatalf("%q vs %q: %d edits", a, b, diff)
 		}
+		// and unambiguous: at least 3 edits from every other rare token, so a
+		// fuzzy matcher cannot land on the wrong planted set and look right.
+		for i := 0; i < queriesPerSh; i++ {
+			other := rareToken(i)
+			if other == b {
+				continue
+			}
+			d := 0
+			for j := range a {
+				if a[j] != other[j] {
+					d++
+				}
+			}
+			if d < 3 {
+				t.Fatalf("%q is %d edits from %q", a, d, other)
+			}
+		}
 	}
 }
 

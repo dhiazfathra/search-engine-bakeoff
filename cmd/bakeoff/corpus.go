@@ -42,9 +42,9 @@ type Query struct {
 }
 
 type Doc struct {
-	ID    int
-	Title string
-	Body  string
+	ID    int    `json:"id"`
+	Title string `json:"title"`
+	Body  string `json:"body"`
 }
 
 // plan holds the planted tokens per doc id.
@@ -74,16 +74,20 @@ func pickDocs(r *rand.Rand, n, k int, used map[int]bool) []int {
 	return out
 }
 
-// typo introduces a single-character substitution in the middle of a token.
+// typoPos is the index of the discriminating block in a rare token
+// ("zrare" + 4 identical letters + "term"); corrupting one of those letters
+// puts the query at edit distance 1 from its own planted token and at least 3
+// from every other, so a fuzzy match cannot be accidentally right.
+const typoPos = 5
+
 func typo(s string) string {
 	b := []byte(s)
-	i := len(b) / 2
-	if b[i] == 'x' {
-		b[i] = 'y'
-	} else {
-		b[i] = 'x'
-	}
+	b[typoPos] = 'z'
 	return string(b)
+}
+
+func rareToken(i int) string {
+	return "zrare" + strings.Repeat(string(rune('a'+i)), 4) + "term"
 }
 
 func buildPlan(n int) *plan {
@@ -95,7 +99,7 @@ func buildPlan(n int) *plan {
 
 	for i := 0; i < queriesPerSh; i++ {
 		// rare single term
-		tok := fmt.Sprintf("zrare%03dterm", i)
+		tok := rareToken(i)
 		rel := pickDocs(r, n, relPerQuery, used)
 		for _, id := range rel {
 			add(id, tok)

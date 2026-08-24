@@ -18,9 +18,9 @@ lock:
 .PHONY: matrix
 matrix: build
 	@mkdir -p $(OUT)
-	$(MAKE) arm PROFILE=pg ENGINE=postgres
-	$(MAKE) arm PROFILE=es ENGINE=elasticsearch
-	$(MAKE) arm PROFILE=ms ENGINE=meilisearch
+	$(MAKE) arm PROFILE=pg ENGINE=postgres SVC=postgres DATA=/var/lib/postgresql/data
+	$(MAKE) arm PROFILE=es ENGINE=elasticsearch SVC=elasticsearch DATA=/usr/share/elasticsearch/data
+	$(MAKE) arm PROFILE=ms ENGINE=meilisearch SVC=meilisearch DATA=/meili_data
 	@echo "results in $(OUT)"
 
 .PHONY: build
@@ -34,6 +34,7 @@ arm:
 	docker compose --profile $(PROFILE) up -d --wait
 	/tmp/bakeoff -engine $(ENGINE) -n $(N) -c $(C) -reps $(REPS) -out $(OUT)/$(ENGINE).json 2>&1 | tee $(OUT)/$(ENGINE).log
 	docker stats --no-stream --format '{{.Name}} {{.MemUsage}} {{.CPUPerc}}' | tee $(OUT)/$(ENGINE).rss.txt
+	docker compose exec -T $(SVC) du -sk $(DATA) | tee $(OUT)/$(ENGINE).du.txt
 	df -h /System/Volumes/Data | tee -a $(OUT)/$(ENGINE).log
 	docker compose --profile $(PROFILE) down -v
 
