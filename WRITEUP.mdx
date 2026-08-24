@@ -47,6 +47,8 @@ Corpus: 1,000,000 documents, 81 judged queries across 5 shapes, 4 reps (first di
 
 Recall@10 / MRR@10 were 1.000 / 1.000 for every engine on every judged shape (`rare`, `and`, `phrase`) it supports — the planted ground truth was retrievable by all three at this corpus size. `common` is NOT MEASURED (too many true positives for a top-10 cutoff to mean anything). Full raw JSON, per-query-shape p50/p95/max, throughput, and container RSS are in `results/n1000000/*.json` and `*.rss.txt`.
 
+"Index size" is not measured identically across engines and that is worth stating plainly: Elasticsearch and Meilisearch's numbers are `du -sk` on their entire data directory, which is effectively index-only for a single-purpose container. Postgres's number is `pg_total_relation_size('docs')` — the table plus its GIN index plus TOAST — deliberately excluding WAL and the rest of the cluster's system catalogs, which would otherwise inflate a shared-cluster database's footprint against two engines that don't have that overhead. The whole-directory `du -sk` for the same Postgres container was 3.46 GiB (committed in `results/n1000000/postgres.du.txt`) — the gap between that and the reported 1.83 GiB is exactly WAL plus catalog overhead, not a discrepancy.
+
 Steady-state RSS: Postgres 797 MiB, Elasticsearch 3.0 GiB (of its 2 GB heap plus off-heap/Lucene cache), Meilisearch 1.35 GiB. No engine was pushed to a memory failure point — this is not a ceiling, just steady state after the load.
 
 ## Why
